@@ -222,7 +222,34 @@ remove_user_from_group() {
   return 0
 }
 
+take_backup(){
+<<comment
+This scripts will take backup from source to target
+comment
 
+src_dir="/home/ubuntu/src"
+
+backup_filename="backup_$(date +%Y-%m-%d-%H-%M-%S)"
+
+tgt_dir="/home/ubuntu/backups/${backup_filename}"
+
+echo "Backup Started"
+
+echo "Backing up to $backup_filename ..."
+
+zip -r "${tgt_dir}.zip" "$src_dir"
+
+local backups=($(ls -t "/home/ubuntu/backups/backup_"*.zip 2>/dev/null))
+
+if [ "${#backups[@]}" -gt 3 ]; then
+        local backups_to_remove=("${backups[@]:3}")
+        for backup in "${backups_to_remove[@]}"; do
+            rm -f "$backup"
+        done
+    fi
+
+echo "Backup Complete"
+}
 
 echo "1.Create User"
 echo "2.View Users"
@@ -233,7 +260,8 @@ echo "6.View Groups"
 echo "7.Delete Group"
 echo "8.Add Users to Group"
 echo "9.Remove Users from Group"
-read -p "Enter your choice [1-9]: " choice
+echo "10.Take Backup"
+read -p "Enter your choice [1-10]: " choice
 case $choice in
         1) add_user;;
         2)view_users;;
@@ -244,6 +272,7 @@ case $choice in
         7)delete_group;;
         8)add_user_to_group;;
         9)remove_user_from_group;;
+        10)take_backup;;
         *)
     echo "Invalid choice. Please select a number between 1 and 3."
     ;;

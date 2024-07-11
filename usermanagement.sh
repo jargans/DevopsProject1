@@ -274,6 +274,6 @@ case $choice in
         9)remove_user_from_group;;
         10)take_backup;;
         *)
-    echo "Invalid choice. Please select a number between 1 and 3."
+    echo "Invalid choice. Please select a number between 1 and 10."
     ;;
 esac
